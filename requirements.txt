@@ -1,0 +1,12 @@
+numpy
+opencv-python
+torch
+torchvision
+faiss-cpu
+tqdm
+fastapi
+uvicorn
+python-multipart
+jinja2
+aiofiles
+yt-dlp

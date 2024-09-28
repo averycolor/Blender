@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Обнаружение дубликатов видео</title>
+    <style>
+        #loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+        }
+        #loading-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Поиск дубликатов видео</h1>
+
+    <form id="upload-form" action="/upload/" enctype="multipart/form-data" method="post">
+        <h2>Загрузить видеофайл:</h2>
+        <input type="file" name="file" accept="video/*">
+
+        <h2>Или введите ссылку на видео:</h2>
+        <input type="url" name="video_url" placeholder="https://example.com/video.mp4">
+
+        <h2>Частота извлечения кадров (по умолчанию каждый 5-й кадр):</h2>
+        <input type="number" name="frame_step" min="1" max="100" value="5">
+
+        <br><br>
+        <button type="submit">Загрузить и проверить</button>
+    </form>
+
+    <!-- Индикатор загрузки -->
+    <div id="loading">
+        <div id="loading-content">
+            <div class="spinner"></div>
+            <p>Идет обработка видео...</p>
+        </div>
+    </div>
+
+    {% if result %}
+        <h2>Результат</h2>
+        <p>{{ result.message }}</p>
+        {% if result.is_duplicate %}
+            <p>ID похожего видео: {{ result.closest_video_id }}</p>
+            <p>Расстояние: {{ result.distance }}</p>
+        {% endif %}
+    {% endif %}
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function() {
+            document.getElementById('loading').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
